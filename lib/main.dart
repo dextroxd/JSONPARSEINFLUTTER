@@ -4,10 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 void main() async{
   List _data = await getJson();
-//  print(_data[0]['title']);
-//  for(int i=0;i<_data.length;i++){
-//    print(_data[i]['title']);
-//  }
+
   runApp(
     new MaterialApp(
       title: "ParsingJson",
@@ -21,25 +18,53 @@ void main() async{
           child: new ListView.builder(
               itemCount: _data.length,
               itemBuilder: (BuildContext context,int position){
-                if(position.isOdd) return new Divider();
-                return new ListTile(
-                  title: new Text("${_data[position]['title']}",
-                  style: new TextStyle(fontSize: 13.9),),
-                  subtitle: new Text("${_data[position]['body']}",
-                  style:new TextStyle(
-                    fontSize: 13.4,
-                     color: Colors.grey,
-                    fontStyle: FontStyle.italic,
-                  ) ,),
-                  leading: new CircleAvatar(
-                    backgroundColor: Colors.green,
-                    child: new Text("${_data[position]['id']}",
-                    style: new TextStyle(
-                      fontSize: 13.4
-                    ),),
-                  ),
-                  onTap: ()=>debugPrint("Hey"),
+                if(position==0)
+                  return new ListTile(
+                    title: new Text("${_data[position]['title']}",
+                      style: new TextStyle(fontSize: 13.9),),
+                    subtitle: new Text("${_data[position]['body']}",
+                      style:new TextStyle(
+                        fontSize: 13.4,
+                        color: Colors.grey,
+                        fontStyle: FontStyle.italic,
+                      ) ,),
+                    leading: new CircleAvatar(
+                      backgroundColor: Colors.green,
+                      child: new Text("${_data[position]['id']}",
+                        style: new TextStyle(
+                            fontSize: 13.4
+                        ),),
+                    ),
+                    onTap: (){_showOnTapMessage(context, "${_data[position]['title']}");}
+                  );
+//                  return new Divider();
+//                final index = position ~/ 2;
+
+                return new Column(
+                  children:<Widget>[
+                    new Divider(),
+                new ListTile(
+                title: new Text("${_data[position]['title']}",
+                style: new TextStyle(fontSize: 13.9),),
+                subtitle: new Text("${_data[position]['body']}",
+                style:new TextStyle(
+                fontSize: 13.4,
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+                ) ,),
+                leading: new CircleAvatar(
+                backgroundColor: Colors.green,
+                child: new Text("${_data[position]['id']}",
+                style: new TextStyle(
+                fontSize: 13.4
+                ),),
+                ),
+                onTap: (){_showOnTapMessage(context, "${_data[position]['title']}");},
+                ),
+
+                  ]
                 );
+
               },
               padding: const EdgeInsets.all(16.0),
           ) ,
@@ -48,6 +73,18 @@ void main() async{
     )
   );
 }
+void _showOnTapMessage(BuildContext context,String message){
+  var alert = new AlertDialog(
+    title: new Text('App'),
+    content: new Text(message),
+    actions: <Widget>[
+      new FlatButton(onPressed: (){Navigator.pop(context);} , child:new Text('OK')),
+    ],
+  );
+  showDialog(context: context,builder: (context)=>alert);
+}
+
+
 Future<List>getJson() async
 {
   String apiUrl = 'https://jsonplaceholder.typicode.com/posts';
